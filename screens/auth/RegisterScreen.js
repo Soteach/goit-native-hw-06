@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
+import { authSignUpUser } from '../../redux/auth/authOperations';
 import {
   StyleSheet,
   Text,
@@ -13,6 +14,8 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+import { useDispatch } from 'react-redux';
+
 const initialState = {
   email: '',
   password: '',
@@ -22,19 +25,19 @@ const initialState = {
 export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setisShowKeyboard] = useState(false);
   const [state, setstate] = useState(initialState);
-  const keyboardHide = () => {
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = () => {
     setisShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
+    dispatch(authSignUpUser(state));
     setstate(initialState);
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        keyboardHide();
-      }}
-    >
+    <TouchableWithoutFeedback>
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
@@ -103,7 +106,7 @@ export default function RegistrationScreen({ navigation }) {
 
                 <Text style={styles.showPass}>Показати</Text>
               </View>
-              <TouchableOpacity style={styles.btn} onPress={keyboardHide}>
+              <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
                 <Text style={styles.btnText}>Зареєструватися</Text>
               </TouchableOpacity>
               <TouchableOpacity
