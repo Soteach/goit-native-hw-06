@@ -13,24 +13,21 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
+const initialState = {
+  email: '',
+  password: '',
+  nickname: '',
+};
+
 export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setisShowKeyboard] = useState(false);
+  const [state, setstate] = useState(initialState);
   const keyboardHide = () => {
     setisShowKeyboard(false);
     Keyboard.dismiss();
-    console.log('email:', email, 'login:', login, 'password:', password);
-    clearForm();
+    console.log(state);
+    setstate(initialState);
   };
-
-  const clearForm = () => {
-    setEmail('');
-    setLogin('');
-    setPassword('');
-  };
-
-  const [email, setEmail] = useState('');
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
 
   return (
     <TouchableWithoutFeedback
@@ -50,7 +47,7 @@ export default function RegistrationScreen({ navigation }) {
             <View
               style={{
                 ...styles.form,
-                // marginBottom: isShowKeyboard ? 20 : 100,
+                marginBottom: isShowKeyboard ? 320 : 0,
               }}
             >
               <StatusBar style="auto" />
@@ -76,20 +73,20 @@ export default function RegistrationScreen({ navigation }) {
                 placeholder="Логін"
                 placeholderTextColor={'#BDBDBD'}
                 onFocus={() => setisShowKeyboard(true)}
-                value={login}
-                onChangeText={value => {
-                  setLogin(value);
-                }}
+                value={state.nickname}
+                onChangeText={value =>
+                  setstate(prevState => ({ ...prevState, nickname: value }))
+                }
               />
               <TextInput
                 style={styles.input}
                 placeholder="Адреса електронної пошти"
                 placeholderTextColor={'#BDBDBD'}
                 onFocus={() => setisShowKeyboard(true)}
-                value={email}
-                onChangeText={value => {
-                  setEmail(value);
-                }}
+                value={state.email}
+                onChangeText={value =>
+                  setstate(prevState => ({ ...prevState, email: value }))
+                }
               />
               <View>
                 <TextInput
@@ -98,10 +95,10 @@ export default function RegistrationScreen({ navigation }) {
                   placeholderTextColor={'#BDBDBD'}
                   secureTextEntry={true}
                   onFocus={() => setisShowKeyboard(true)}
-                  value={password}
-                  onChangeText={value => {
-                    setPassword(value);
-                  }}
+                  value={state.password}
+                  onChangeText={value =>
+                    setstate(prevState => ({ ...prevState, password: value }))
+                  }
                 />
 
                 <Text style={styles.showPass}>Показати</Text>
