@@ -14,31 +14,46 @@ import {
   Dimensions,
 } from 'react-native';
 
+import { useDispatch } from 'react-redux';
+import { authSignInUser } from '../../redux/auth/authOperations';
+
 const initialState = {
   email: '',
   password: '',
 };
 
 export default function LoginScreen({ navigation }) {
-  console.log('navigation', navigation);
-  const [isShowKeyboard, setisShowKeyboard] = useState(false);
+  // console.log('navigation', navigation);
+  const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
   const [state, setstate] = useState(initialState);
+  const [isSecurePassword, setIsSecurePassword] = useState(true);
+  const [dimensions, setDimensions] = useState(
+    Dimensions.get('window').width - 20 * 2
+  );
 
-  const keyboardHide = () => {
-    setisShowKeyboard(false);
+  const handleSubmit = () => {
+    setIsShowKeyBoard(false);
     Keyboard.dismiss();
-    console.log(state);
+    // console.log('submit', state);
+    dispatch(authSignInUser(state));
     setstate(initialState);
   };
 
-  const [dimensions, setdimensions] = useState(
-    Dimensions.get('window').width - 20 * 2
-  );
+  const dispatch = useDispatch();
+
+  const closeKeyboardBackdrop = () => {
+    setIsShowKeyBoard(false);
+    Keyboard.dismiss();
+  };
+
+  // const [dimensions, setdimensions] = useState(
+  //   Dimensions.get('window').width - 20 * 2
+  // );
 
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get('window').width - 20 * 2;
-      setdimensions(width);
+      setDimensions(width);
     };
     Dimensions.addEventListener('change', onChange);
     return () => {
@@ -47,11 +62,7 @@ export default function LoginScreen({ navigation }) {
   }, []);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        keyboardHide();
-      }}
-    >
+    <TouchableWithoutFeedback onPress={closeKeyboardBackdrop}>
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
@@ -64,7 +75,7 @@ export default function LoginScreen({ navigation }) {
             <View
               style={{
                 ...styles.form,
-                // marginBottom: isShowKeyboard ? 320 : 0,
+                marginBottom: isShowKeyBoard ? 320 : 0,
               }}
             >
               <View style={styles.avatarWrap}>
@@ -89,7 +100,7 @@ export default function LoginScreen({ navigation }) {
                 style={styles.input}
                 placeholder="Адреса електронної пошти"
                 placeholderTextColor={'#BDBDBD'}
-                onFocus={() => setisShowKeyboard(true)}
+                onFocus={() => setIsShowKeyBoard(true)}
                 value={state.email}
                 onChangeText={value =>
                   setstate(prevState => ({ ...prevState, email: value }))
@@ -100,7 +111,7 @@ export default function LoginScreen({ navigation }) {
                 placeholder="Пароль"
                 placeholderTextColor={'#BDBDBD'}
                 secureTextEntry={true}
-                onFocus={() => setisShowKeyboard(true)}
+                onFocus={() => setIsShowKeyBoard(true)}
                 value={state.password}
                 onChangeText={value =>
                   setstate(prevState => ({ ...prevState, password: value }))
@@ -108,7 +119,7 @@ export default function LoginScreen({ navigation }) {
               />
               <Text style={styles.showPass}>Показати</Text>
 
-              <TouchableOpacity style={styles.btn} onPress={keyboardHide}>
+              <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
                 <Text style={styles.btnTitle}>Увійти</Text>
               </TouchableOpacity>
               <TouchableOpacity
