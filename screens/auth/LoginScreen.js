@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 
 import { useDispatch } from 'react-redux';
-import { authSignInUser } from '../../redux/auth/authOperations';
+import { authSignUpUser } from '../../redux/auth/authOperations';
 
 const initialState = {
   email: '',
@@ -35,7 +35,7 @@ export default function LoginScreen({ navigation }) {
     setIsShowKeyBoard(false);
     Keyboard.dismiss();
     // console.log('submit', state);
-    dispatch(authSignInUser(state));
+    dispatch(authSignUpUser(state));
     setstate(initialState);
   };
 
